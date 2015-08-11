@@ -4,6 +4,8 @@
 element in an array.
 """
 
+import random
+
 
 def hoare_partition(A, pivot_index):
     pivot = A[pivot_index]
@@ -21,7 +23,6 @@ def hoare_partition(A, pivot_index):
                 break
 
         if left_ptr < right_ptr:
-            print A, left_ptr, right_ptr
             A[left_ptr], A[right_ptr] = A[right_ptr], A[left_ptr]
         else:
             return right_ptr
@@ -46,14 +47,15 @@ def quickselect(A, k):
     """
     Find the kth smallest (zero indexed) number in A.
     """
-    pivot_pos = lomuto_partition(A, 0)
-    print A, pivot_pos, k
+    random_pivot_index = random.randint(0,len(A)-1)
+    pivot_pos = lomuto_partition(A, random_pivot_index)
     if k == pivot_pos:
         return A[pivot_pos]
     if k < pivot_pos:
         return quickselect(A[:pivot_pos], k)
     else:
         return quickselect(A[pivot_pos+1:], k-pivot_pos-1)
+
 
 if __name__ == "__main__":
     A = [3, 1, 1, 2, 6, 0]
