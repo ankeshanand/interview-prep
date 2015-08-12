@@ -9,3 +9,7 @@
   ```Ex. Original Array A={1,2,3,5,6,7,8} Rotated Array B={5,6,7,8,1,2,3}```
   ([solution](https://github.com/ankeshanand/interview-prep/blob/master/arrays/checkrotation.py))
 5. Dutch National Flag Problem
+
+### Binary Search
+1. Binary Search in a rotated sorted array.
+2. Find pivot of rotation in a rotated sorted array.
