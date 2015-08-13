@@ -13,3 +13,5 @@
 ### Binary Search
 1. Binary Search in a rotated sorted array.
 2. Find pivot of rotation in a rotated sorted array.
+3. Find the floor value of a key in a sorted array.
+4. Find the number of occurences of a key in a sorted array which might contain duplicate elements.
