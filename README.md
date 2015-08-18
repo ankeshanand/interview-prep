@@ -21,3 +21,6 @@
 ### Dynamic Programming
 1. **Min Coin Change Problem:** You are given n types of coin denominations of values v(1) < v(2) < ... < v(n) (all integers). Assume v(1) = 1, so you can always make change for any amount of money C. Give an algorithm which makes change for an amount of money C with as few coins as possible
 2. **Coin Change Problem:** [UVA Problem](https://uva.onlinejudge.org/index.php?option=onlinejudge&page=show_problem&problem=293)
+
+
+### Graphs
