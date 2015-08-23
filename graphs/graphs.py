@@ -1,60 +1,106 @@
 class Graph(object):
-    def __init__(self, n_vertices=0):
-        self.n_vertices = n_vertices
+    def __init__(self, weighted=False):
         self.adj_list = {}
+        self.vertices = set()
+        self.weighted = weighted
 
-    def add_edge(self, u, v, weight):
-        if u not in self.adj_list:
-            self.adj_list[u] = {v: weight}
+    def add_edge(self, u, v, weight=None):
+        if not self.weighted:
+            self.adj_list[u] = self.adj_list.get(u, [])
+            self.adj_list[u].append(v)
+
         else:
+            # for weighted graphs
+            self.adj_list[u] = self.adj_list.get(u, {})
             self.adj_list[u][v] = weight
 
+        self.vertices.add(u)
+        self.vertices.add(v)
 
-def dfs(g, vertex):
-    dfs_visit(g, vertex)
-
-def dfs_visit(g, v, parent=None, relation_str=''):
-    if parent:
-        relation_str += g.adj_list[parent][v]
-        if relation_str == relation_test:
-            print 1
-            import sys
-            sys.exit()
-
-    if len(relation_str) > len(relation_test):
-        return
-
-    for item in g.adj_list[v]:
-        dfs_visit(g, item, v, relation_str)
+    def neighbours(self, vertex):
+        return self.adj_list.get(vertex, iter([]))
 
 
-def create_graph(g, matrix):
-    for i, line in enumerate(matrix):
-        for j, relation in enumerate(line):
-            if i != j:
-                g.add_edge(i, j, relation)
+class DFSResult(object):
+    """ Container to hold the results of a DFS Traversal. """
+
+    def __init__(self):
+        self.parent = {}
+        self.finished = {}
+        self.order = []
 
 
-n = int(raw_input())
-matrix = []
-for line in xrange(n):
-    str = raw_input()
-    matrix.append(str)
-first = int(raw_input())
-second = int(raw_input())
+def dfs(g):
+    results = DFSResult()
+    for vertex in g.vertices:
+        if vertex not in results.parent:
+            dfs_visit(g, vertex, results)
+    return results
 
-relation_test = raw_input()
 
-g = Graph()
-create_graph(g, matrix)
+def dfs_visit(g, vertex, results, parent=None):
+    results.parent[vertex] = parent
 
-#print g.adj_list
+    for neighbour in g.neighbours(vertex):
+        if neighbour not in results.parent:
+            dfs_visit(g, neighbour, results, vertex)
 
-result = False
-answer = False
+        elif neighbour not in results.finished:
+            # Back edge encountered, there is a cycle
+            pass
 
-dfs(g, first)
-dfs(g, second)
+        # there are some other cases for forward edge and
+        # cross edge in directed graphs
 
-print 0
+    results.finished[vertex] = True
+    results.order.append(vertex)
 
+
+def topological_sort(g):
+    dfs_result = dfs(g)
+    dfs_result.order.reverse()
+    return dfs_result.order
+
+
+from collections import deque
+
+class BFSResult():
+    def __init__(self):
+        self.parent = {}
+        self.level = {}
+
+
+def bfs(g, s):
+    '''Queue-based implementation of BFS.'''
+    results = BFSResult()
+    results.parent[s] = None
+    results.level[s] = 0
+
+    queue = deque()
+    queue.append(s)
+
+    while queue:
+        v = queue.popleft()
+        for neighbour in g.neighbours(v):
+            if neighbour not in results.level:
+                results.parent[neighbour] = v
+                results.level[neighbour] = results.level[v] + 1
+                queue.append(neighbour)
+
+    return results
+
+
+if __name__ == '__main__':
+    g = Graph()
+    g.add_edge(0,1)
+    g.add_edge(1,2)
+    g.add_edge(2,0)
+
+    dfs_result = dfs(g)
+    print dfs_result.parent
+
+    topological_order = topological_sort(g)
+    print topological_order
+
+    bfs_result = bfs(g, 0)
+    print bfs_result.level
