@@ -90,6 +90,49 @@ def bfs(g, s):
     return results
 
 
+class DjikstraResult():
+    def __init__(self):
+        self.dist = {}
+        self.parent = {}
+
+
+def djikstra(g, s):
+    """ Djikstra implementation without Priority Queues.
+    Complexity: O(|V|*deletemin + (|V+E|)*insert) = O(|V|^2)
+
+    Couldn't use priority queue because Python doesn't provide a
+    decrease key method and it's tough to implement.
+    """
+
+    results = DjikstraResult()
+    results.dist = {x: float('inf') for x in g.vertices}
+    results.dist[s] = 0
+    results.parent[s] = None
+
+    unvisited = g.vertices
+
+    while unvisited:
+        # get vertex with minimum distance (Extract Min)
+        nv = None
+        for v in results.dist:
+            if v in unvisited:
+                if results.dist[v] < results.dist.get(nv, float('inf')):
+                    nv = v
+
+        if nv is None:
+            break
+
+        unvisited.remove(nv)
+
+        for n in g.neighbours(nv):
+            if results.dist[n] > results.dist[nv] + g.adj_list[nv][n]:
+                # Relax(nv, n, weight)
+                results.dist[n] = results.dist[nv] + g.adj_list[nv][n]
+                results.parent[n] = nv
+
+    return results
+
+
 if __name__ == '__main__':
     g = Graph()
     g.add_edge(0,1)
@@ -104,3 +147,12 @@ if __name__ == '__main__':
 
     bfs_result = bfs(g, 0)
     print bfs_result.level
+
+    g = Graph(weighted=True)
+    g.add_edge(0,1,4)
+    g.add_edge(0,2,2)
+    g.add_edge(1,2,3)
+    g.add_edge(1,4,2)
+    g.add_edge(2,0,5)
+    djikstra_result = djikstra(g, 1)
+    print djikstra_result.dist
