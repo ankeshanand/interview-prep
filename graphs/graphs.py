@@ -1,18 +1,27 @@
 class Graph(object):
-    def __init__(self, weighted=False):
+    def __init__(self, weighted=False, undirected=False):
         self.adj_list = {}
         self.vertices = set()
         self.weighted = weighted
+        self.undirected = undirected
 
     def add_edge(self, u, v, weight=None):
         if not self.weighted:
             self.adj_list[u] = self.adj_list.get(u, [])
             self.adj_list[u].append(v)
 
+            if self.undirected:
+                self.adj_list[v] = self.adj_list.get(v, [])
+                self.adj_list[v].append(u)
+
         else:
             # for weighted graphs
             self.adj_list[u] = self.adj_list.get(u, {})
             self.adj_list[u][v] = weight
+
+            if self.undirected:
+                self.adj_list[v] = self.adj_list.get(v, {})
+                self.adj_list[v][u] = weight
 
         self.vertices.add(u)
         self.vertices.add(v)
@@ -134,7 +143,7 @@ def djikstra(g, s):
 
 
 if __name__ == '__main__':
-    g = Graph()
+    g = Graph(undirected=True)
     g.add_edge(0,1)
     g.add_edge(1,2)
     g.add_edge(2,0)
@@ -154,5 +163,6 @@ if __name__ == '__main__':
     g.add_edge(1,2,3)
     g.add_edge(1,4,2)
     g.add_edge(2,0,5)
+
     djikstra_result = djikstra(g, 1)
     print djikstra_result.dist
